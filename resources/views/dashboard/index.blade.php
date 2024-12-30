@@ -26,17 +26,19 @@
                 </div>
 
                 <!-- Recent Updates Card -->
-                <div class="bg-gray-100 p-6 rounded-lg shadow-md">
+                <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-xl font-semibold text-gray-700">Aktivitas Terakhir</h3>
                     <ul class="mt-4">
                         @forelse ($recentUpdates as $update)
                             <li class="mb-2">
-                                <div class="flex justify-between items-center text-sm">
-                                    <span class="font-bold text-gray-800">{{ $update->barang->name }}</span>
-                                    <span class="{{ $update->action == 'subtracted' ? 'text-red-500' : 'text-green-500' }}">
-                                        {{ $update->action == 'subtracted' ? '-' . $update->quantity : '+' . $update->quantity }}
-                                    </span>
-                                    <span class="text-gray-500">{{ $update->created_at->format('d/m/Y') }}</span>
+                                <div class="flex justify-between items-center text-sm my-2">
+                                    <a href="{{ route('barang.show', $update->barang_id) }}" class="font-bold text-gray-800 truncate max-w-xs hover:underline">{{ optional($update->barang)->name }}</a>
+                                    <div class="flex items-center">
+                                        <span class="{{ $update->action == 'subtracted' ? 'text-red-500' : 'text-green-500' }}">
+                                            {{ $update->action == 'subtracted' ? '-' . $update->quantity . ' pcs.': '+' . $update->quantity . ' pcs.' }}
+                                        </span>
+                                        <span class="text-gray-500 text-sm ml-4">{{ $update->created_at->format('d/m/Y') }}</span>
+                                    </div>
                                 </div>
                             </li>
                         @empty
