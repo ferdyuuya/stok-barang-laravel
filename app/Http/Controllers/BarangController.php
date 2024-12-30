@@ -62,7 +62,7 @@ class BarangController extends Controller
         $barang->description = $validatedData['description'];
         $barang->save();
 
-        return redirect()->route('barang.index')->with('success', 'Barang updated successfully.');
+        return redirect()->route('barang.show', ['barang' => $barang_id])->with('success', 'Barang updated successfully.');
     }
 
     public function destroy($barang_id)

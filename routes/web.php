@@ -14,8 +14,10 @@ Route::get('/dashboard',[DashboardController::class, 'index'])->middleware(['aut
 
 Route::resource('barang', BarangController::class)->middleware('auth');
 
-Route::post('/stok-log/add', [StokLogController::class, 'add'])->name('stoklog.add');
-Route::post('/stok-log/subtract', [StokLogController::class, 'subtract'])->name('stoklog.subtract');
+Route::post('/barang/add', [StokLogController::class, 'add'])->name('stoklog.add');
+Route::post('/barang/subtract', [StokLogController::class, 'subtract'])->name('stoklog.subtract');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

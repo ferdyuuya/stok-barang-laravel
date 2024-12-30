@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
+    <div class="py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Barang Table -->
             <div class="bg-white overflow-hidden shadow-md rounded-lg mb-8">
@@ -29,17 +29,17 @@
                                     <th class="px-4 py-2 text-left">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="overflow-y-auto" style="max-height: 300px;"> <!-- Fixed height and scroll inside tbody -->
                                 @foreach ($barangs as $barang)
-                                <tr class="hover:bg-gray-100 cursor-pointer" onclick="window.location.href='{{ route('barang.show', $barang->id) }}'">
+                                <tr onclick="window.location.href='{{ route('barang.show', $barang->id) }}'" class="hover:bg-gray-100 cursor-pointer">
                                     <td class="px-4 py-3 text-center">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $barang->name }}</td>
                                     <td class="px-4 py-3">{{ $barang->description }}</td>
                                     <td class="px-4 py-3">{{ $barang->quantity }} pcs.</td>
                                     <td class="px-4 py-3">
                                         <div class="flex items-center space-x-2">
-                                            <button class="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600">+</button>
-                                            <button class="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600">-</button>
+                                            <button data-barang-id="{{ $barang->id }}" onclick="openAddModal(this)" data-modal-target="add_quantity_barang" data-modal-toggle="add_quantity_barang" class="bg-green-500 text-white px-3 py-2 rounded-md hover:bg-green-600">+</button>
+                                            <button data-barang-id="{{ $barang->id }}" onclick="openSubtractModal(this)" data-modal-target="substract_quantity_barang" data-modal-toggle="substract_quantity_barang" class="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600">-</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -55,35 +55,72 @@
         </div>
     </div>
 
-    <!-- Modal -->
-    <div id="add_barang" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <!-- Modal For Add Quantity Barang-->
+    <div id="add_quantity_barang" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow">
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
-                    <h3 class="text-lg font-semibold text-gray-900 ">
-                        Tambah Barang
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Tambah Barang <span class="font-bold" id="barangName"></span>
                     </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="add_barang">
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="add_quantity_barang">
                         <span class="sr-only">Close modal</span>
                     </button>
                 </div>
                 <!-- Modal body -->
-                <form action="{{ route('barang.store') }}" method="POST" class="p-4 md:p-5">
+                <form action="{{ route('stoklog.add') }}" method="POST" class="px-4 md:py-4 md:px-5">
                     @csrf
-                    <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="grid gap-4 mb-2 grid-cols-2">
+                        <input type="hidden" name="barang_id" id="barangId">
                         <div class="col-span-2">
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Nama</label>
-                            <input type="text" name="name" id="name" class="bg-gray-50 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="UPS 600VA Merek A" required="">
+                            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900">Jumlah</label>
+                            <input type="number" name="quantity" id="quantity" class="bg-gray-50 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="_70_" required>
                         </div>
                         <div class="col-span-2">
                             <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi</label>
-                            <input type="text" name="description" id="description" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="UPS 600VA Merek A" required="">
+                            <input type="text" name="description" id="description" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="UPS 600VA Merek A" required>
                         </div>
                     </div>
-                    <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                        Tambahkan Barang
+                    <button type="submit" class="text-white items-right bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-xs rounded-lg text-sm px-5 py-2.5 text-center ml-auto">
+                        Tambahkan Jumlah Barang
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal For Substract Quantity Barang-->
+    <div id="substract_quantity_barang" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Kurangi Barang <span class="font-bold" id="barangNameSubtract"></span>
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="substract_quantity_barang">
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form action="{{ route('stoklog.subtract') }}" method="POST" class="px-4 md:py-4 md:px-5">
+                    @csrf
+                    <div class="grid gap-4 mb-2 grid-cols-2">
+                        <input type="hidden" name="barang_id" id="barangIdSubtract">
+                        <div class="col-span-2">
+                            <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900">Jumlah</label>
+                            <input type="number" name="quantity" id="quantitySubtract" class="bg-gray-50 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="_70_" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi</label>
+                            <input type="text" name="description" id="descriptionSubtract" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="UPS 600VA Merek A" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="text-white items-right bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-xs rounded-lg text-sm px-5 py-2.5 text-center ml-auto">
+                        Kurangi Jumlah Barang
                     </button>
                 </form>
             </div>
@@ -103,5 +140,31 @@ function filterTable() {
             row.style.display = "none"; 
         }
     });
+}
+
+function openAddModal(button) {
+    event.stopPropagation();
+    const barangId = button.getAttribute('data-barang-id');
+    document.getElementById('barangId').value = barangId;
+
+    const barangName = button.closest('tr').querySelector('td:nth-child(2)').textContent; 
+    document.getElementById('barangName').textContent = barangName;
+
+    const modal = document.getElementById('add_quantity_barang');
+    modal.classList.remove('hidden');
+    modal.classList.add('block');
+}
+
+function openSubtractModal(button) {
+    event.stopPropagation();
+    const barangId = button.getAttribute('data-barang-id');
+    document.getElementById('barangIdSubtract').value = barangId;
+
+    const barangName = button.closest('tr').querySelector('td:nth-child(2)').textContent; 
+    document.getElementById('barangNameSubtract').textContent = barangName;
+
+    const modal = document.getElementById('substract_quantity_barang');
+    modal.classList.remove('hidden');
+    modal.classList.add('block');
 }
 </script>

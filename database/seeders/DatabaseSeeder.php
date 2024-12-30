@@ -26,6 +26,6 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->count(20)->create();
         Barang::factory()->count(10)->create();
-        StokLog::factory()->count(200)->create();
+        // StokLog::factory()->count(200)->create(s);
     }
 }

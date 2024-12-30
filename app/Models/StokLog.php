@@ -12,6 +12,8 @@ class StokLog extends Model
 
     protected $fillable = [
         'barang_id', 
+        'description',
+        'action',
         'quantity'
     ];
 
