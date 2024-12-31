@@ -15,8 +15,9 @@
 
             <!-- Main Content Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
                 <!-- Total Barang Card -->
-                <div class="bg-blue-100 p-6 rounded-lg shadow-md">
+                <div class="bg-blue-100 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
                     <h3 class="text-xl font-semibold text-blue-700">Total Barang</h3>
                     @if ($totalBarang > 0)
                         <p class="text-3xl font-bold text-gray-900 mt-4">{{ $totalBarang }}</p>
@@ -26,19 +27,19 @@
                 </div>
 
                 <!-- Recent Updates Card -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="bg-white p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
                     <h3 class="text-xl font-semibold text-gray-700">Aktivitas Terakhir</h3>
-                    <ul class="mt-4">
+                    <ul class="mt-4 space-y-4">
                         @forelse ($recentUpdates as $update)
-                            <li class="mb-2">
-                                <div class="flex justify-between items-center text-sm my-2">
-                                    <a href="{{ route('barang.show', $update->barang_id) }}" class="font-bold text-gray-800 truncate max-w-xs hover:underline">{{ optional($update->barang)->name }}</a>
-                                    <div class="flex items-center">
-                                        <span class="{{ $update->action == 'subtracted' ? 'text-red-500' : 'text-green-500' }}">
-                                            {{ $update->action == 'subtracted' ? '-' . $update->quantity . ' pcs.': '+' . $update->quantity . ' pcs.' }}
-                                        </span>
-                                        <span class="text-gray-500 text-sm ml-4">{{ $update->created_at->format('d/m/Y') }}</span>
-                                    </div>
+                            <li class="flex justify-between items-center text-sm my-2">
+                                <a href="{{ route('barang.show', $update->barang_id) }}" class="font-bold text-gray-800 truncate max-w-xs hover:underline hover:text-blue-500">
+                                    {{ optional($update->barang)->name }}
+                                </a>
+                                <div class="flex items-center">
+                                    <span class="{{ $update->action == 'subtracted' ? 'text-red-500' : 'text-green-500' }}">
+                                        {{ $update->action == 'subtracted' ? '-' . $update->quantity . ' pcs.' : '+' . $update->quantity . ' pcs.' }}
+                                    </span>
+                                    <span class="text-gray-500 text-sm ml-4">{{ $update->created_at->format('d/m/Y') }}</span>
                                 </div>
                             </li>
                         @empty
@@ -48,10 +49,11 @@
                 </div>
 
                 <!-- Total User Card -->
-                <div class="bg-blue-100 p-6 rounded-lg shadow-md">
+                <div class="bg-blue-100 p-6 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-xl">
                     <h3 class="text-xl font-semibold text-blue-700">Total User</h3>
-                    {{-- <p class="text-3xl font-bold text-gray-900 mt-4">{{ $totalUser }}</p> --}}
+                    <p class="text-3xl font-bold text-gray-900 mt-4">{{ $totalUser ?? 0 }}</p>
                 </div>
+
             </div>
         </div>
     </div>

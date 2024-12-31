@@ -5,16 +5,16 @@
             <!-- Header -->
             <div class="px-6 py-8 bg-blue-500 text-white">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-semibold">Barang Details</h1>
-                    <button data-modal-target="edit_barang" data-modal-toggle="edit_barang" class="bg-transparent border border-white text-white py-1 px-2 rounded hover:bg-white hover:text-blue-800 text-sm">
-                        Edit
+                    <h1 class="text-2xl font-semibold">Detail Barang</h1>
+                    <button data-modal-target="edit_barang" data-modal-toggle="edit_barang" class="bg-transparent border border-white text-white py-1 px-2 rounded hover:bg-white hover:text-blue-800 text-sm" title="Edit Barang">
+                        <i class="fas fa-edit"></i> Edit
                     </button>
                 </div>
                 <a href="{{ route('barang.index') }}" class="flex items-center space-x-2 text-white-600 hover:text-white-800 mt-2 text-sm">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
-                    <span>Back</span>
+                    <span>Kembali</span>
                 </a>
             </div>
 
@@ -23,38 +23,40 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <!-- Name -->
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Name</p>
+                        <p class="text-sm font-medium text-gray-600">Nama</p>
                         <p class="text-m text-gray-800 my-2">{{ $barang->name }}</p>
                     </div>
                     <!-- Description -->
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Description</p>
+                        <p class="text-sm font-medium text-gray-600">Deskripsi</p>
                         <p class="text-m text-gray-800 my-2">{{ $barang->description }}</p>
                     </div>
                     <!-- Quantity -->
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Quantity</p>
+                        <p class="text-sm font-medium text-gray-600">Jumlah</p>
                         <p class="text-m text-gray-800 my-2">{{ $barang->quantity }} pcs</p>
                     </div>
                     <!-- Last Updated -->
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Aktivitas terakhir</p>
+                        <p class="text-sm font-medium text-gray-600">Aktivitas Terakhir</p>
                         <p class="text-m text-gray-800 my-2">{{ $barang->updated_at->format('l, d F Y H:i') }}</p>
                     </div>
                 </div>
             </div>
 
+            <hr class="my-6 border-t border-gray-300" />
+
             <!-- Stok Log Table -->
             <div class="px-6 py-8">
-                <h2 class="text-lg font-bold text-gray-800 mb-4">Stok Log</h2>
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Log Stok</h2>
                 <div class="overflow-x-auto">
                     <table id="stokLogTable" class="min-w-full text-m text-gray-600">
                         <thead class="text-gray-700 uppercase text-m font-semibold text-center">
                             <tr>
-                                <th class="px-4 py-2 ">Tanggal</th>
-                                <th class="px-4 py-2 ">Deskripsi</th>
-                                <th class="px-4 py-2 ">Aktivitas</th>
-                                <th class="px-4 py-2 ">Jumlah</th>
+                                <th class="px-4 py-2">Tanggal</th>
+                                <th class="px-4 py-2">Deskripsi</th>
+                                <th class="px-4 py-2">Aktivitas</th>
+                                <th class="px-4 py-2">Jumlah</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,7 +105,8 @@
                         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
                             <h3 class="text-lg font-semibold text-gray-900">Edit Barang</h3>
                             <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="edit_barang" data-modal-target="edit_barang">
-                                <span class="sr-only">Close modal</span>
+                                <span class="sr-only">Tutup modal</span>
+                                <i class="fas fa-times"></i>
                             </button>
                         </div>
                         <!-- Modal body -->
@@ -122,17 +125,17 @@
                             </div>
                             <div class="flex justify-end gap-2">
                                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
-                                    <p class="p-1 text-sm"> Update Barang</p>
+                                    <p class="p-1 text-sm"> Perbarui Barang</p>
                                 </button>
                             </form>
-                                <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
-                                        Delete Barang
-                                    </button>
-                                </form>
-                            </div>
+                            <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus item ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-white inline-flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">
+                                    <p class="p-1 text-sm"> Hapus Barang</p>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
