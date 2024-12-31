@@ -35,13 +35,16 @@ class BarangController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
         ]);   
+
+        // dd($validatedData);
+
         Barang::create([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
             'quantity' => 0,
         ]);
 
-        return redirect()->route('barang.index')->with('success', 'Barang created successfully.');
+        return redirect()->back()->with('success', 'Barang created successfully.');
     }
 
     public function edit($barang_id)

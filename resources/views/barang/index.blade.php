@@ -22,7 +22,7 @@
                         <table id="barangTable" class="min-w-full table-auto text-base text-gray-800">
                             <thead class="bg-gray-200">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">ID</th>
+                                    <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">No.</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Nama</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Deskripsi</th>
                                     <th class="px-6 py-3 text-left text-sm font-medium text-gray-700">Jumlah</th>
@@ -32,7 +32,7 @@
                             <tbody>
                                 @foreach ($barangs as $barang)
                                 <tr onclick="window.location.href='{{ route('barang.show', $barang->id) }}'" class="hover:bg-gray-100 cursor-pointer text-sm">
-                                    <td class="px-6 py-3 text-center">{{ $loop->iteration }}</td>
+                                    <td class="px-6 py-3 text-center">{{ ($barangs->currentPage() - 1) * $barangs->perPage() + $loop->iteration }}</td>
                                     <td class="px-6 py-3">{{ $barang->name }}</td>
                                     <td class="px-6 py-3">{{ $barang->description }}</td>
                                     <td class="px-6 py-3">{{ $barang->quantity }} pcs.</td>
@@ -124,6 +124,39 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal For Add  Barang-->
+    <div id="add_barang" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow">
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t">
+                    <h3 class="text-lg font-semibold text-gray-900">
+                        Tambah Barang <span class="font-bold" id="barangName"></span>
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="add_quantity_barang">
+                        <span class="sr-only">Tutup modal</span>
+                    </button>
+                </div>
+                <form action="{{ route('barang.store') }}" method="POST" class="px-4 md:py-4 md:px-5">
+                    @csrf
+                    <div class="grid gap-4 mb-2 grid-cols-2">
+                        {{-- <input type="hidden" name="barang_id" id="barangId"> --}}
+                        <div class="col-span-2">
+                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">Nama Barang</label>
+                            <input type="text" name="name" id="name" class="bg-gray-50 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="70" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900">Deskripsi</label>
+                            <input type="text" name="description" id="description" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="UPS 600VA Merek A" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="text-white items-right bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-xs rounded-lg text-sm px-5 py-2.5 text-center ml-auto">
+                        Tambahkan Jumlah Barang
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </x-app-layout>
 
 <script>
@@ -162,6 +195,13 @@ function openSubtractModal(button) {
     document.getElementById('barangNameSubtract').textContent = barangName;
 
     const modal = document.getElementById('substract_quantity_barang');
+    modal.classList.remove('hidden');
+    modal.classList.add('block');
+}
+
+function openAddBarangModal(button) {
+    event.stopPropagation();
+    const modal = document.getElementById('add_barang');
     modal.classList.remove('hidden');
     modal.classList.add('block');
 }
